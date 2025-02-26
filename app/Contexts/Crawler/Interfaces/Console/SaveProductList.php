@@ -7,6 +7,8 @@ namespace App\Contexts\Crawler\Interfaces\Console;
 use App\Contexts\Crawler\Application\Command\GetUrlContentCommand;
 use App\Contexts\Crawler\Application\Service\GetUrlContentAppService;
 use App\Contexts\Crawler\Domain\ValueObject\Url;
+use App\Contexts\Scraper\Application\Command\ScrapProductPageCommand;
+use App\Contexts\Scraper\Application\Contract\ScrapProductPageAppServiceInterface;
 use Illuminate\Console\Command;
 
 final class SaveProductList extends Command
@@ -27,10 +29,12 @@ final class SaveProductList extends Command
 
 
     public function __construct(
-        private GetUrlContentAppService $getUrlContentAppService,
+//        private GetUrlContentAppService $getUrlContentAppService,
+        private ScrapProductPageAppServiceInterface $scrapProductPageAppService,
     ) {
         parent::__construct();
     }
+
     /**
      * Execute the console command.
      */
@@ -41,8 +45,10 @@ final class SaveProductList extends Command
             $this->error('Please provide a URL');
             exit(1);
         }
-        $this->getUrlContentAppService->handle(
-            new GetUrlContentCommand($url)
-        );
+
+        $this->scrapProductPageAppService->handle(new ScrapProductPageCommand(1));
+//        $this->getUrlContentAppService->handle(
+//            new GetUrlContentCommand($url)
+//        );
     }
 }
