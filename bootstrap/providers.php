@@ -1,6 +1,6 @@
 <?php
 
 return [
-    App\Contexts\Crawler\Interfaces\Infrastructure\Laravel\CrawlerContextServiceProvider::class,
-    App\Providers\AppServiceProvider::class,
+    App\Contexts\Crawler\Infrastructure\Laravel\CrawlerContextServiceProvider::class,
+    App\Shared\Infrastructure\Laravel\SharedContextServiceProvider::class,
 ];
