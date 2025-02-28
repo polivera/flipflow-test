@@ -6,9 +6,13 @@ namespace App\Contexts\Crawler\Infrastructure\Service;
 
 use App\Contexts\Crawler\Domain\Contracts\ContentFetchInterface;
 use App\Contexts\Crawler\Domain\ValueObject\PageContent;
+use App\Contexts\Crawler\Infrastructure\Exception\ContentFetchException;
 use App\Shared\Domain\Contract\LoggerInterface;
 use App\Shared\Domain\ValueObject\Url;
+use Exception;
 use GuzzleHttp\Cookie\CookieJarInterface;
+use GuzzleHttp\Exception\ClientException;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 
 final readonly class GuzzleContentFetch implements ContentFetchInterface
@@ -16,26 +20,36 @@ final readonly class GuzzleContentFetch implements ContentFetchInterface
     public function __construct(
         private LoggerInterface $logger,
         private CookieJarInterface $cookieJar
-    )
-    {
+    ) {
     }
 
+    /**
+     * @throws ContentFetchException
+     */
     public function getContent(Url $url): ?PageContent
     {
         try {
             $requestOptions = ['cookies' => $this->cookieJar];
-
             $response = Http::withOptions($requestOptions)
                 ->withHeaders($this->buildRequestHeaders())
                 ->get($url->value);
             if ($response->successful()) {
-                return new PageContent($response->body());
+                return PageContent::create($response->body());
             }
-            // TODO: Exception here, I should add common exception for this interface.
-        } catch (\Throwable $e) {
-           $this->logger->error("Error fetching content", ['exception' => $e, 'url' => $url->value]);
+            return null;
+        } catch (ConnectionException $exception) {
+            $this->logger->error(
+                "Connection error retrieving content",
+                ['url' => $url->value, 'exception' => $exception]
+            );
+            throw ContentFetchException::ofConnectionError($url, $exception);
+        } catch (Exception $exception) {
+            $this->logger->error(
+                "Unexpected error while fetching content",
+                ['url' => $url->value, 'exception' => $exception]
+            );
+            throw ContentFetchException::ofUnexpectedError($url, $exception);
         }
-        return null;
     }
 
     private function buildRequestHeaders(): array

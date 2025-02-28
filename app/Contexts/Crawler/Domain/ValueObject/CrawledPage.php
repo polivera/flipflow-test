@@ -16,8 +16,13 @@ final readonly class CrawledPage
         public PageContent $content,
     ) {}
 
-    public static function create(Domain $domain, Url $url, PageContent $content): self
+    public static function createWithoutID(Domain $domain, Url $url, PageContent $content): self
     {
         return new self(NumberID::empty(), $domain, $url, $content);
+    }
+
+    public static function create(NumberID $id, Domain $domain, Url $url, PageContent $content): self
+    {
+        return new self($id, $domain, $url, $content);
     }
 }

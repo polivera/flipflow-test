@@ -8,8 +8,13 @@ use App\Shared\Domain\ValueObject\Url;
 
 final readonly class Domain
 {
-    public function __construct(public string $value) {
+    private function __construct(public string $value) {
         // TODO: Domain validation
+    }
+
+    public static function create(string $value): self
+    {
+        return new self($value);
     }
 
     public static function fromUrl(Url $url): self

@@ -6,5 +6,10 @@ namespace App\Contexts\Crawler\Domain\ValueObject;
 
 final readonly class PageContent
 {
-    public function __construct(public string $body) {}
+    private function __construct(public string $body) {}
+
+    public static function create(string $body): self
+    {
+        return new self($body);
+    }
 }

@@ -27,11 +27,11 @@ final readonly class CrawledPagesMapper
 
     public static function toValueObject(CrawledPagesModel $crawledPagesModel): CrawledPage
     {
-        return new CrawledPage(
-            new NumberID($crawledPagesModel->{CrawledPagesModel::ID}),
-            new Domain($crawledPagesModel->{CrawledPagesModel::DOMAIN}),
-            new Url($crawledPagesModel->{CrawledPagesModel::URL}),
-            new PageContent($crawledPagesModel->{CrawledPagesModel::CONTENT}),
+        return CrawledPage::create(
+            NumberID::create($crawledPagesModel->{CrawledPagesModel::ID}),
+            Domain::create($crawledPagesModel->{CrawledPagesModel::DOMAIN}),
+            Url::create($crawledPagesModel->{CrawledPagesModel::URL}),
+            PageContent::create($crawledPagesModel->{CrawledPagesModel::CONTENT})
         );
     }
 }

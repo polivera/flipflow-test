@@ -12,7 +12,7 @@ use App\Contexts\Crawler\Domain\Contracts\CrawlPageServiceInterface;
 use App\Contexts\Crawler\Domain\Service\CrawledPageService;
 use App\Contexts\Crawler\Infrastructure\Persistence\Repository\CrawledPagesSQLiteRepository;
 use App\Contexts\Crawler\Infrastructure\Service\GuzzleContentFetch;
-use App\Contexts\Product\Interface\Console\GetProductList;
+use App\Contexts\Crawler\Interface\Console\ConsoleSaveProductList;
 use Carbon\Laravel\ServiceProvider;
 use GuzzleHttp\Cookie\CookieJarInterface;
 use GuzzleHttp\Cookie\CookieJar;
@@ -23,7 +23,7 @@ final class CrawlerContextServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
-                GetProductList::class,
+                ConsoleSaveProductList::class,
             ]);
         }
     }

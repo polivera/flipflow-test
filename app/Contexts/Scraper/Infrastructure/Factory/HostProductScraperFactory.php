@@ -7,6 +7,7 @@ namespace App\Contexts\Scraper\Infrastructure\Factory;
 use App\Contexts\Crawler\Domain\ValueObject\Domain;
 use App\Contexts\Scraper\Domain\Contract\HostProductScraperFactoryInterface;
 use App\Contexts\Scraper\Domain\Contract\HostProductScraperInterface;
+use App\Contexts\Scraper\Infrastructure\Exception\HostProductScraperFactoryException;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Facades\Config;
@@ -18,15 +19,26 @@ final readonly class HostProductScraperFactory implements HostProductScraperFact
     }
 
     /**
-     * @throws BindingResolutionException
+     * @throws HostProductScraperFactoryException
      */
     public function createForDomain(Domain $domain): HostProductScraperInterface
     {
         $productScraperMap = Config::get('scrapers.product', []);
-        // TODO: Fix this exception
-        if (!isset($productScraperMap[$domain->value])) {
-            throw new \Exception("this is an error");
+        if (empty($productScraperMap)) {
+            throw HostProductScraperFactoryException::ofConfigNotFound();
         }
-        return $this->container->make($productScraperMap[$domain->value]);
+        if (!isset($productScraperMap[$domain->value])) {
+            throw HostProductScraperFactoryException::ofMappedDomainNotFound($domain);
+        }
+
+        try {
+            return $this->container->make($productScraperMap[$domain->value]);
+        } catch (BindingResolutionException $e) {
+            throw HostProductScraperFactoryException::ofScraperClassBindError(
+                $domain,
+                $productScraperMap[$domain->value],
+                $e
+            );
+        }
     }
 }

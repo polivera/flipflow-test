@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\Contexts\Crawler\Interface\Console;
 
 use App\Contexts\Crawler\Application\Command\GetUrlContentCommand;
+use App\Contexts\Crawler\Application\Exception\GetUrlContentAppServiceException;
 use App\Contexts\Crawler\Application\Service\GetUrlContentAppService;
 use Illuminate\Console\Command;
 
-final class SaveProductList extends Command
+final class ConsoleSaveProductList extends Command
 {
     /**
      * The name and signature of the console command.
@@ -27,8 +28,8 @@ final class SaveProductList extends Command
 
     public function __construct(
         private readonly GetUrlContentAppService $getUrlContentAppService,
-//        private ScrapProductPageAppServiceInterface $scrapProductPageAppService,
-    ) {
+    )
+    {
         parent::__construct();
     }
 
@@ -43,9 +44,13 @@ final class SaveProductList extends Command
             exit(1);
         }
 
-//        $this->scrapProductPageAppService->handle(new ScrapProductPageCommand(2));
-        $this->getUrlContentAppService->handle(
-            new GetUrlContentCommand($url)
-        );
+        try {
+            $this->getUrlContentAppService->handle(
+                new GetUrlContentCommand($url)
+            );
+            $this->info('Content has been saved');
+        } catch (GetUrlContentAppServiceException $e) {
+            $this->error("Error processing content. Error: " . $e->getMessage());
+        }
     }
 }
