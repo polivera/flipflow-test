@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Contexts\Scraper\Domain\ValueObject;
+namespace App\Shared\Domain\ValueObject;
 
 final readonly class Price
 {
@@ -26,5 +26,11 @@ final readonly class Price
         $numericValue = preg_replace('/[^0-9.]/', '', $value);
         $currencyCode = preg_replace('/[0-9., ]/', '', $value);
         return new self((int)$numericValue, $currencyCode);
+    }
+
+    public function toString(): string
+    {
+        $formatedNumber = number_format($this->value / 100, 2);
+        return sprintf("%s %s", $formatedNumber, $this->currency);
     }
 }

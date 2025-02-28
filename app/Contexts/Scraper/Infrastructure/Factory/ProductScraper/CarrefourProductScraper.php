@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Contexts\Scraper\Infrastructure\Factory\ProductScraper;
 
 use App\Contexts\Crawler\Domain\ValueObject\CrawledPage;
-use App\Contexts\Crawler\Domain\ValueObject\Url;
 use App\Contexts\Scraper\Domain\Contract\HostProductScraperInterface;
-use App\Contexts\Scraper\Domain\ValueObject\Price;
 use App\Contexts\Scraper\Domain\ValueObject\ProductName;
-use App\Contexts\Scraper\Domain\ValueObject\ScrapedProduct;
 use App\Contexts\Scraper\Domain\ValueObject\ScrapedContentList;
+use App\Contexts\Scraper\Domain\ValueObject\ScrapedProduct;
+use App\Shared\Domain\ValueObject\Price;
+use App\Shared\Domain\ValueObject\Url;
 use DOMDocument;
 use DOMXPath;
 

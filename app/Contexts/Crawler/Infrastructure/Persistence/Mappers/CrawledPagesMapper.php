@@ -7,9 +7,9 @@ namespace App\Contexts\Crawler\Infrastructure\Persistence\Mappers;
 use App\Contexts\Crawler\Domain\ValueObject\CrawledPage;
 use App\Contexts\Crawler\Domain\ValueObject\Domain;
 use App\Contexts\Crawler\Domain\ValueObject\PageContent;
-use App\Contexts\Crawler\Domain\ValueObject\Url;
 use App\Contexts\Crawler\Infrastructure\Persistence\Model\CrawledPagesModel;
 use App\Shared\Domain\ValueObject\NumberID;
+use App\Shared\Domain\ValueObject\Url;
 
 final readonly class CrawledPagesMapper
 {

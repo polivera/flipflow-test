@@ -6,8 +6,8 @@ namespace App\Contexts\Crawler\Infrastructure\Service;
 
 use App\Contexts\Crawler\Domain\Contracts\ContentFetchInterface;
 use App\Contexts\Crawler\Domain\ValueObject\PageContent;
-use App\Contexts\Crawler\Domain\ValueObject\Url;
 use App\Shared\Domain\Contract\LoggerInterface;
+use App\Shared\Domain\ValueObject\Url;
 use GuzzleHttp\Cookie\CookieJarInterface;
 use Illuminate\Support\Facades\Http;
 

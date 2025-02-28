@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Contexts\Crawler\Domain\ValueObject;
 
 use App\Shared\Domain\ValueObject\NumberID;
+use App\Shared\Domain\ValueObject\Url;
 
 final readonly class CrawledPage
 {

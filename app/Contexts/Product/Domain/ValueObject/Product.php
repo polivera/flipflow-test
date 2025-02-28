@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Contexts\Scraper\Domain\ValueObject;
+namespace App\Contexts\Product\Domain\ValueObject;
 
+use App\Contexts\Scraper\Domain\ValueObject\ProductName;
 use App\Shared\Domain\ValueObject\NumberID;
 use App\Shared\Domain\ValueObject\Price;
 use App\Shared\Domain\ValueObject\Url;
 
-final readonly class ScrapedProduct
+final readonly class Product
 {
     private function __construct(
         public NumberID $id,
@@ -20,17 +21,6 @@ final readonly class ScrapedProduct
     ) {
     }
 
-    public static function create(
-        NumberID $crawledPageID,
-        ProductName $productName,
-        Price $price,
-        Url $imageUrl,
-        Url $productUrl,
-    ): self
-    {
-        return new self(NumberID::empty(), $crawledPageID, $productName, $price, $imageUrl, $productUrl);
-    }
-
     public static function build(
         NumberID $id,
         NumberID $crawledPageID,
@@ -38,8 +28,7 @@ final readonly class ScrapedProduct
         Price $price,
         Url $imageUrl,
         Url $productUrl,
-    ): self
-    {
+    ): self {
         return new self($id, $crawledPageID, $productName, $price, $imageUrl, $productUrl);
     }
 }

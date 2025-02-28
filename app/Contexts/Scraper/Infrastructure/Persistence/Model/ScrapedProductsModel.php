@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Contexts\Scraper\Infrastructure\Persistence\Model;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Shared\Infrastructure\Persistence\Model\BaseModel;
 
-class ScrapedProductsModel extends Model
+class ScrapedProductsModel extends BaseModel
 {
     public const TABLE_NAME = 'scraped_products';
     public const ID = 'scraped_product_id';

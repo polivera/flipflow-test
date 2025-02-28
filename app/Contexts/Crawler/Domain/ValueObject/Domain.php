@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Contexts\Crawler\Domain\ValueObject;
 
+use App\Shared\Domain\ValueObject\Url;
+
 final readonly class Domain
 {
     public function __construct(public string $value) {

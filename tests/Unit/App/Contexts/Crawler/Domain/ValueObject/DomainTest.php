@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\App\Contexts\Crawler\Domain\ValueObject;
 
 use App\Contexts\Crawler\Domain\ValueObject\Domain;
-use App\Contexts\Crawler\Domain\ValueObject\Url;
+use App\Shared\Domain\ValueObject\Url;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;

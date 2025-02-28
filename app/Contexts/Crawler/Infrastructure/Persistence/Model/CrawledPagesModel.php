@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Contexts\Crawler\Infrastructure\Persistence\Model;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Shared\Infrastructure\Persistence\Model\BaseModel;
 
-class CrawledPagesModel extends Model
+class CrawledPagesModel extends BaseModel
 {
     public const TABLE_NAME = 'crawled_pages';
     public const ID = 'crawled_page_id';

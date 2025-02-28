@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Contexts\Crawler\Domain\ValueObject;
-
-use InvalidArgumentException;
+namespace App\Shared\Domain\ValueObject;
 
 final readonly class Url
 {

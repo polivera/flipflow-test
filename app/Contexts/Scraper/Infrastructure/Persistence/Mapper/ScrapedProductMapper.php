@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Contexts\Scraper\Infrastructure\Persistence\Mapper;
 
-use App\Contexts\Crawler\Domain\ValueObject\Url;
-use App\Contexts\Scraper\Domain\ValueObject\Price;
 use App\Contexts\Scraper\Domain\ValueObject\ProductName;
 use App\Contexts\Scraper\Domain\ValueObject\ScrapedProduct;
 use App\Contexts\Scraper\Infrastructure\Persistence\Model\ScrapedProductsModel;
 use App\Shared\Domain\ValueObject\NumberID;
+use App\Shared\Domain\ValueObject\Price;
+use App\Shared\Domain\ValueObject\Url;
 
 final readonly class ScrapedProductMapper
 {

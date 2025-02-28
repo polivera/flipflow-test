@@ -2,13 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Contexts\Crawler\Interfaces\Console;
+namespace App\Contexts\Crawler\Interface\Console;
 
 use App\Contexts\Crawler\Application\Command\GetUrlContentCommand;
 use App\Contexts\Crawler\Application\Service\GetUrlContentAppService;
-use App\Contexts\Crawler\Domain\ValueObject\Url;
-use App\Contexts\Scraper\Application\Command\ScrapProductPageCommand;
-use App\Contexts\Scraper\Application\Contract\ScrapProductPageAppServiceInterface;
 use Illuminate\Console\Command;
 
 final class SaveProductList extends Command
