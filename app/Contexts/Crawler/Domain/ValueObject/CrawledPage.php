@@ -10,12 +10,13 @@ final readonly class CrawledPage
 {
     public function __construct(
         public NumberID $id,
+        public Domain $domain,
         public Url $url,
         public PageContent $content,
     ) {}
 
-    public static function create(Url $url, PageContent $content): self
+    public static function create(Domain $domain, Url $url, PageContent $content): self
     {
-        return new self(NumberID::empty(), $url, $content);
+        return new self(NumberID::empty(), $domain, $url, $content);
     }
 }

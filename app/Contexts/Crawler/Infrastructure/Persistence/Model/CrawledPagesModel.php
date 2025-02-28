@@ -10,6 +10,7 @@ class CrawledPagesModel extends Model
 {
     public const TABLE_NAME = 'crawled_pages';
     public const ID = 'crawled_page_id';
+    public const DOMAIN = 'domain';
     public const URL = 'url';
     public const CONTENT = 'content';
     public const CREATED_AT = 'created_at';
@@ -17,5 +18,4 @@ class CrawledPagesModel extends Model
 
     protected $primaryKey = self::ID;
     protected $table = self::TABLE_NAME;
-
 }

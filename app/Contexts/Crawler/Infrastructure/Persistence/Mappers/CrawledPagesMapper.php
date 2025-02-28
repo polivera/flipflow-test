@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Contexts\Crawler\Infrastructure\Persistence\Mappers;
 
 use App\Contexts\Crawler\Domain\ValueObject\CrawledPage;
+use App\Contexts\Crawler\Domain\ValueObject\Domain;
 use App\Contexts\Crawler\Domain\ValueObject\PageContent;
 use App\Contexts\Crawler\Domain\ValueObject\Url;
 use App\Contexts\Crawler\Infrastructure\Persistence\Model\CrawledPagesModel;
@@ -18,6 +19,7 @@ final readonly class CrawledPagesMapper
         if (!$crawledPage->id->isEmpty()) {
             $model->{CrawledPagesModel::ID} = $crawledPage->id->value;
         }
+        $model->{CrawledPagesModel::DOMAIN} = $crawledPage->domain->value;
         $model->{CrawledPagesModel::URL} = $crawledPage->url->value;
         $model->{CrawledPagesModel::CONTENT} = $crawledPage->content->body;
         return $model;
@@ -27,6 +29,7 @@ final readonly class CrawledPagesMapper
     {
         return new CrawledPage(
             new NumberID($crawledPagesModel->{CrawledPagesModel::ID}),
+            new Domain($crawledPagesModel->{CrawledPagesModel::DOMAIN}),
             new Url($crawledPagesModel->{CrawledPagesModel::URL}),
             new PageContent($crawledPagesModel->{CrawledPagesModel::CONTENT}),
         );

@@ -29,8 +29,8 @@ final class SaveProductList extends Command
 
 
     public function __construct(
-//        private GetUrlContentAppService $getUrlContentAppService,
-        private ScrapProductPageAppServiceInterface $scrapProductPageAppService,
+        private readonly GetUrlContentAppService $getUrlContentAppService,
+//        private ScrapProductPageAppServiceInterface $scrapProductPageAppService,
     ) {
         parent::__construct();
     }
@@ -46,9 +46,9 @@ final class SaveProductList extends Command
             exit(1);
         }
 
-        $this->scrapProductPageAppService->handle(new ScrapProductPageCommand(1));
-//        $this->getUrlContentAppService->handle(
-//            new GetUrlContentCommand($url)
-//        );
+//        $this->scrapProductPageAppService->handle(new ScrapProductPageCommand(2));
+        $this->getUrlContentAppService->handle(
+            new GetUrlContentCommand($url)
+        );
     }
 }

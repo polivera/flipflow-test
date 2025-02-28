@@ -17,8 +17,14 @@ final readonly class NumberID
         return new self(0);
     }
 
+    public static function create(int $value): self
+    {
+        return new self($value);
+    }
+
     public function isEmpty(): bool
     {
         return $this->value === 0;
     }
+
 }

@@ -14,6 +14,7 @@ return new class extends Migration
     {
         Schema::create(CrawledPagesModel::TABLE_NAME, function (Blueprint $table) {
             $table->id(CrawledPagesModel::ID);
+            $table->string(CrawledPagesModel::DOMAIN)->index();
             $table->string(CrawledPagesModel::URL)->unique()->index();
             $table->text(CrawledPagesModel::CONTENT);
             $table->timestamps();

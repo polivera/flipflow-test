@@ -12,6 +12,7 @@ use App\Shared\Domain\ValueObject\NumberID;
 
 final readonly class CrawledPagesReaderSQLiteRepository implements CrawledPagesReaderInterface
 {
+    // TODO: Check the best way to share repository between contexts
     public function getById(NumberID $crawledPageID): ?CrawledPage
     {
         $data = CrawledPagesModel::query()->where(CrawledPagesModel::ID, $crawledPageID->value)->firstOrFail();
