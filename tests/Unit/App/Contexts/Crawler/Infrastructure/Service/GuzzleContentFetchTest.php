@@ -9,6 +9,7 @@ use App\Contexts\Crawler\Infrastructure\Exception\ContentFetchException;
 use App\Contexts\Crawler\Infrastructure\Service\GuzzleContentFetch;
 use App\Shared\Domain\Contract\LoggerInterface;
 use App\Shared\Domain\ValueObject\Url;
+use Exception;
 use GuzzleHttp\Cookie\CookieJarInterface;
 use http\Client\Response;
 use Illuminate\Http\Client\ConnectionException;
@@ -37,17 +38,10 @@ use PHPUnit\Framework\TestCase;
         );
     }
 
-    protected function tearDown(): void
-    {
-        Mockery::close();
-        parent::tearDown();
-    }
-
     public function testGetContentReturnsPageContentOnSuccess(): void
     {
-        // Arrange
         $url = Url::create('https://example.com');
-        $responseBody = '<html><body>Hello World</body></html>';
+        $responseBody = '<html lang="en"><body>Hello World</body></html>';
 
         $responseMock = Mockery::mock(Response::class);
         $responseMock->shouldReceive('successful')->once()->andReturn(true);
@@ -67,17 +61,14 @@ use PHPUnit\Framework\TestCase;
             ->with($url->value)
             ->andReturn($responseMock);
 
-        // Act
         $result = $this->contentFetcher->getContent($url);
 
-        // Assert
         $this->assertInstanceOf(PageContent::class, $result);
         $this->assertEquals($responseBody, $result->body);
     }
 
     public function testGetContentReturnsNullOnUnsuccessfulResponse(): void
     {
-        // Arrange
         $url = Url::create('https://example.com');
 
         $responseMock = Mockery::mock(Response::class);
@@ -97,16 +88,13 @@ use PHPUnit\Framework\TestCase;
             ->with($url->value)
             ->andReturn($responseMock);
 
-        // Act
         $result = $this->contentFetcher->getContent($url);
 
-        // Assert
         $this->assertNull($result);
     }
 
-    public function testGetContentThrowsContentFetchException(): void
+    public function testHttpGetThrowsConnectionException(): void
     {
-        // Arrange
         $url = Url::create('https://example.com');
 
         $responseMock = Mockery::mock(Response::class);
@@ -119,20 +107,84 @@ use PHPUnit\Framework\TestCase;
 
         Http::shouldReceive('withHeaders')
             ->once()
+            ->withArgs(function(array $headers) {
+                // TODO: Improve this test so the error is clearer.
+                $this->assertEquals(array_keys($headers), $this->shouldContainHeaders());
+                return true;
+            })
             ->andReturnSelf();
 
+        $mockException = new ConnectionException('Connection Error');
         Http::shouldReceive('get')
             ->once()
             ->with($url->value)
-            ->andThrow(ConnectionException::class);
+            ->andThrow($mockException);
 
-        //TODO: Fix this
-        $this->loggerMock->shouldReceive('error');
+        $this->loggerMock->shouldReceive('error')
+            ->with('Connection error retrieving content', ['url' => $url->value, 'exception' => $mockException])
+            ->once();
+
+        $this->expectException(ContentFetchException::class);
+        $this->expectExceptionMessage('Connection error when fetching content from https://example.com');
+
+        $result = $this->contentFetcher->getContent($url);
+
+        $this->assertNull($result);
+    }
+
+    public function testHttpGetThrowsUnhandledException(): void
+    {
+        $url = Url::create('https://example.com');
+
+        $responseMock = Mockery::mock(Response::class);
+        $responseMock->shouldReceive('successful')->once()->andReturn(false);
+
+        Http::shouldReceive('withOptions')
+            ->once()
+            ->with(['cookies' => $this->cookieJarMock])
+            ->andReturnSelf();
+
+        Http::shouldReceive('withHeaders')
+            ->once()
+            ->withArgs(function(array $headers) {
+                // TODO: Improve this test so the error is clearer.
+                $this->assertEquals(array_keys($headers), $this->shouldContainHeaders());
+                return true;
+            })
+            ->andReturnSelf();
+
+        $mockException = new Exception('Unhandled exception');
+        Http::shouldReceive('get')
+            ->once()
+            ->with($url->value)
+            ->andThrow($mockException);
+
+        $this->loggerMock->shouldReceive('error')
+            ->with('Unexpected error while fetching content', ['url' => $url->value, 'exception' => $mockException])
+            ->once();
 
         $this->expectException(ContentFetchException::class);
 
         $result = $this->contentFetcher->getContent($url);
 
         $this->assertNull($result);
+    }
+
+    private function shouldContainHeaders(): array
+    {
+        return [
+            'User-Agent',
+            'Accept',
+            'Accept-Encoding',
+            'Accept-Language',
+            'Cache-Control',
+            'Connection',
+            'Pragma',
+            'Sec-Fetch-Dest',
+            'Sec-Fetch-Mode',
+            'Sec-Fetch-Site',
+            'Sec-Fetch-User',
+            'Upgrade-Insecure-Requests',
+        ];
     }
 }

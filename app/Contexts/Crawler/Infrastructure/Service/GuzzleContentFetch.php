@@ -40,13 +40,13 @@ final readonly class GuzzleContentFetch implements ContentFetchInterface
             return null;
         } catch (ConnectionException $exception) {
             $this->logger->error(
-                "Connection error retrieving content",
+                'Connection error retrieving content',
                 ['url' => $url->value, 'exception' => $exception]
             );
             throw ContentFetchException::ofConnectionError($url, $exception);
         } catch (Exception $exception) {
             $this->logger->error(
-                "Unexpected error while fetching content",
+                'Unexpected error while fetching content',
                 ['url' => $url->value, 'exception' => $exception]
             );
             throw ContentFetchException::ofUnexpectedError($url, $exception);

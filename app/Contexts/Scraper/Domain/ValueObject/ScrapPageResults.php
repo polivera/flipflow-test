@@ -32,11 +32,4 @@ final readonly class ScrapPageResults
             Date::now(),
         );
     }
-
-    public function toArray(): array
-    {
-        return [
-
-        ];
-    }
 }
