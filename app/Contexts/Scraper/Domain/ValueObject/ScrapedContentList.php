@@ -33,10 +33,11 @@ final class ScrapedContentList
     {
         foreach ($data as $item) {
             if (!($item instanceof ScrapedProduct)) {
-                throw new InvalidArgumentException('Array must contain only ScrapedContent instances');
+                throw new InvalidArgumentException(
+                    sprintf("Array must contain only %s instances", ScrapedProduct::class)
+                );
             }
         }
-
         return new self($data);
     }
 }

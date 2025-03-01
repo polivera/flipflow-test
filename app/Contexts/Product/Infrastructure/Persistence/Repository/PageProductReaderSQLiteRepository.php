@@ -14,10 +14,9 @@ use Illuminate\Support\Facades\DB;
 
 final readonly class PageProductReaderSQLiteRepository implements PageProductReaderInterface
 {
-    public function findByPage(Url $url): ?ProductList
+    public function findByPage(Url $url): ProductList
     {
         $productList = ProductList::empty();
-        // TODO: Use of model here again
         $result = DB::table(CrawledPagesModel::TABLE_NAME)
             ->select(ScrapedProductsModel::TABLE_NAME . '.*')
             ->join(
@@ -26,7 +25,8 @@ final readonly class PageProductReaderSQLiteRepository implements PageProductRea
                 '=',
                 ScrapedProductsModel::fromTable(ScrapedProductsModel::CRAWLED_PAGE_ID),
             )
-            ->where(CrawledPagesModel::URL, $url->value)->get();
+            ->where(CrawledPagesModel::URL, $url->value)
+            ->get();
 
         foreach ($result as $product) {
             $productList->add(ProductMapper::fromEntityArray($product));

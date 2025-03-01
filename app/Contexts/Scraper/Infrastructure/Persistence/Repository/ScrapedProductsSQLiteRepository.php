@@ -24,10 +24,6 @@ class ScrapedProductsSQLiteRepository implements ScrapedProductsRepositoryInterf
 
         $success = DB::TABLE(ScrapedProductsModel::TABLE_NAME)->insert($insertData);
 
-        if (!$success) {
-            // TODO: throw something here.
-        }
-
-        return count($insertData);
+        return $success ? count($insertData) : 0;
     }
 }

@@ -17,7 +17,6 @@ final readonly class ListPageProductsService implements ListPageProductsServiceI
 
     public function handle(Url $page): ?ProductList
     {
-        // TODO: Error handling
         return $this->pageProductReader->findByPage($page);
     }
 }

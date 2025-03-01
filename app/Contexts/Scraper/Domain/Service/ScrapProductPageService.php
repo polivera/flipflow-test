@@ -8,6 +8,8 @@ use App\Contexts\Scraper\Domain\Contract\CrawledPagesReaderInterface;
 use App\Contexts\Scraper\Domain\Contract\HostProductScraperFactoryInterface;
 use App\Contexts\Scraper\Domain\Contract\ScrapedProductsRepositoryInterface;
 use App\Contexts\Scraper\Domain\Contract\ScrapProductPageServiceInterface;
+use App\Contexts\Scraper\Domain\ValueObject\ScrapPageResults;
+use App\Shared\Domain\ValueObject\Counter;
 use App\Shared\Domain\ValueObject\NumberID;
 
 final readonly class ScrapProductPageService implements ScrapProductPageServiceInterface
@@ -20,13 +22,17 @@ final readonly class ScrapProductPageService implements ScrapProductPageServiceI
     {
     }
 
-    public function handle(NumberID $crawledPageID): void
+    public function handle(NumberID $crawledPageID): ScrapPageResults
     {
         $crawledPage = $this->crawledPagesReader->getById($crawledPageID);
         $scraper = $this->scraperProductFactory->createForDomain($crawledPage->domain);
         $listResult = $scraper->scrapProducts($crawledPage);
-        $this->scrapedProductsRepository->saveBulk($listResult);
-        dd($listResult);
-        // TODO: Implement handle() method.
+        $storedProducts = $this->scrapedProductsRepository->saveBulk($listResult);
+
+        return ScrapPageResults::fromCurrentAction(
+            $crawledPageID,
+            $crawledPage->domain,
+            Counter::from($storedProducts)
+        );
     }
 }

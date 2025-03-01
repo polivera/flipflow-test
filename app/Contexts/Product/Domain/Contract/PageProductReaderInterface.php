@@ -9,5 +9,5 @@ use App\Shared\Domain\ValueObject\Url;
 
 interface PageProductReaderInterface
 {
-    public function findByPage(Url $url): ?ProductList;
+    public function findByPage(Url $url): ProductList;
 }

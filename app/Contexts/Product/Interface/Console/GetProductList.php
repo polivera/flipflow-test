@@ -49,6 +49,6 @@ final class GetProductList extends Command
             $response[] = ProductListResponse::fromValueObject($result);
         }
 
-        echo json_encode($response);
+        $this->info(json_encode($response,  JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
     }
 }

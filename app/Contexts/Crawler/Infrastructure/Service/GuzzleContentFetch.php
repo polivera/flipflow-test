@@ -33,6 +33,7 @@ final readonly class GuzzleContentFetch implements ContentFetchInterface
             $response = Http::withOptions($requestOptions)
                 ->withHeaders($this->buildRequestHeaders())
                 ->get($url->value);
+
             if ($response->successful()) {
                 return PageContent::create($response->body());
             }

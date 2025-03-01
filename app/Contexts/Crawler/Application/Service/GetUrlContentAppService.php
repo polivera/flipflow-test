@@ -10,7 +10,7 @@ use App\Contexts\Crawler\Application\Exception\GetUrlContentAppServiceException;
 use App\Contexts\Crawler\Domain\Contracts\CrawlPageServiceInterface;
 use App\Contexts\Crawler\Domain\Exception\CrawlPageServiceException;
 use App\Contexts\Scraper\Domain\Contract\ScrapProductPageServiceInterface;
-use App\Shared\Domain\Contract\LoggerInterface;
+use App\Contexts\Scraper\Domain\ValueObject\ScrapPageResults;
 use App\Shared\Domain\ValueObject\Url;
 use InvalidArgumentException;
 
@@ -27,12 +27,12 @@ final readonly class GetUrlContentAppService implements GetUrlContentAppServiceI
     /**
      * @throws GetUrlContentAppServiceException
      */
-    public function handle(GetUrlContentCommand $command): void
+    public function handle(GetUrlContentCommand $command): ScrapPageResults
     {
         try {
             $url = Url::create($command->url);
             $crawlPage = $this->crawlPageService->handle($url);
-            $this->scrapProductPageService->handle($crawlPage->id);
+            return $this->scrapProductPageService->handle($crawlPage->id);
         } catch (InvalidArgumentException $e) {
             throw GetUrlContentAppServiceException::ofInvalidArgument($e);
         } catch (CrawlPageServiceException $e) {

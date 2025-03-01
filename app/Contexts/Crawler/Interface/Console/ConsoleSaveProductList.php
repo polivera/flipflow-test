@@ -7,6 +7,7 @@ namespace App\Contexts\Crawler\Interface\Console;
 use App\Contexts\Crawler\Application\Command\GetUrlContentCommand;
 use App\Contexts\Crawler\Application\Exception\GetUrlContentAppServiceException;
 use App\Contexts\Crawler\Application\Service\GetUrlContentAppService;
+use App\Contexts\Crawler\Interface\Dto\ScrapPageResultResponse;
 use Illuminate\Console\Command;
 
 final class ConsoleSaveProductList extends Command
@@ -45,10 +46,10 @@ final class ConsoleSaveProductList extends Command
         }
 
         try {
-            $this->getUrlContentAppService->handle(
+            $result = $this->getUrlContentAppService->handle(
                 new GetUrlContentCommand($url)
             );
-            $this->info('Content has been saved');
+            $this->info(ScrapPageResultResponse::fromValueObject($url, $result)->toPrettyJson());
         } catch (GetUrlContentAppServiceException $e) {
             $this->error("Error processing content. Error: " . $e->getMessage());
         }

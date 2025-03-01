@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
     #[DataProvider('fromUrlDataProvider')]
     public function test_get_domain_from_url($input, $expected): void
     {
-        $mockUrl = new Url($input);
+        $mockUrl = Url::create($input);
         $domain = Domain::fromUrl($mockUrl);
 
         $this->assertEquals($expected, $domain->value, "Expected domain $expected does not match $domain->value");
