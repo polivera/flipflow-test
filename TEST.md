@@ -18,8 +18,9 @@ Ej: `php artisan app:show-product-list --url=https://www.carrefour.es/supermerca
 Lo primero que intenté hacer es tener un comando que haga el fetch a la página de congelados y me devuelva el contenido, y hacerlo rápido todo en un mismo archivo para tener una idea de los problemas que me podía llegar a encontrar. Por ejemplo (y esto es lo que me encontré):
 - Bloqueo de request por ser muy genérica. Lo solucione básicamente copiando las headers de mi browser al hacer la request.
 - Bloqueo por no manejar cookies. Lo solucioné usando el cookie jar en guzzle.
-  Viendo esto, y pensando que quizá iba a tener que usar librerías externas para crawling y scraping empecé a plantear la estructura del proyecto usando DDD para que después sea más fácil cambiar lógicas especificas por librerías.
-  Trato de no usar librerías si no es necesario y para esto no use por 2 razones:
+
+Viendo esto, y pensando que quizá iba a tener que usar librerías externas para crawling y scraping empecé a plantear la estructura del proyecto usando DDD para que después sea más fácil cambiar lógicas especificas por librerías.
+Trato de no usar librerías si no es necesario y para esto no use por 2 razones:
   1. Falta de conocimiento de este tipo de librerías
   2. Al ser un scope tan pequeño (1 sólo sitio) es algo manejable. Si fuesen más creo que es preferible usar una librería.
      Al llegar a la parte de hacer scraping me di cuenta que debería tener una solución por sitio por si quería agregar alguno sitio más si tenía tiempo, entonces decidí usar un factory con un config que, dependiendo el dominio, me entregue el scraper correspondiente.
