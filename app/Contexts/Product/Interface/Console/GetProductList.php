@@ -43,12 +43,7 @@ final class GetProductList extends Command
             exit(1);
         }
 
-        $resultList = $this->listUrlProductsAppService->handle(new ListUrlProductsCommand($url));
-        $response = [];
-        foreach ($resultList->iterator() as $result) {
-            $response[] = ProductListResponse::fromValueObject($result);
-        }
-
-        $this->info(json_encode($response,  JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+        $resultList = $this->listUrlProductsAppService->handle(ListUrlProductsCommand::create($url));
+        $this->info(ProductListResponse::fromValueObject($resultList)->toPrettyJson());
     }
 }

@@ -20,7 +20,7 @@ final readonly class ScrapedProduct
     ) {
     }
 
-    public static function create(
+    public static function createWithoutID(
         NumberID $crawledPageID,
         ProductName $productName,
         Price $price,
@@ -31,7 +31,7 @@ final readonly class ScrapedProduct
         return new self(NumberID::empty(), $crawledPageID, $productName, $price, $imageUrl, $productUrl);
     }
 
-    public static function build(
+    public static function create(
         NumberID $id,
         NumberID $crawledPageID,
         ProductName $productName,

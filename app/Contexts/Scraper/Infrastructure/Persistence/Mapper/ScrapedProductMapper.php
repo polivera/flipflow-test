@@ -31,7 +31,7 @@ final readonly class ScrapedProductMapper
 
     public static function toValueObject(ScrapedProductsModel $scrapedProductsModel): ScrapedProduct
     {
-        return ScrapedProduct::build(
+        return ScrapedProduct::create(
             NumberID::create($scrapedProductsModel->{ScrapedProductsModel::ID}),
             NumberID::create($scrapedProductsModel->{ScrapedProductsModel::CRAWLED_PAGE_ID}),
             ProductName::create($scrapedProductsModel->{ScrapedProductsModel::NAME}),
@@ -39,8 +39,8 @@ final readonly class ScrapedProductMapper
                 $scrapedProductsModel->{ScrapedProductsModel::PRICE},
                 $scrapedProductsModel->{ScrapedProductsModel::CURRENCY_CODE}
             ),
-            Url::create($scrapedProductsModel->{ScrapedProductsModel::PRODUCT_URL}),
             Url::create($scrapedProductsModel->{ScrapedProductsModel::IMAGE_URL}),
+            Url::create($scrapedProductsModel->{ScrapedProductsModel::PRODUCT_URL}),
         );
     }
 }

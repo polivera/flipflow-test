@@ -21,7 +21,7 @@ final readonly class CrawledPagesMapper
         }
         $model->{CrawledPagesModel::DOMAIN} = $crawledPage->domain->value;
         $model->{CrawledPagesModel::URL} = $crawledPage->url->value;
-        $model->{CrawledPagesModel::CONTENT} = $crawledPage->content->body;
+        $model->{CrawledPagesModel::CONTENT} = mb_convert_encoding($crawledPage->content->body, 'UTF-8', 'AUTO');
         return $model;
     }
 
@@ -31,7 +31,7 @@ final readonly class CrawledPagesMapper
             NumberID::create($crawledPagesModel->{CrawledPagesModel::ID}),
             Domain::create($crawledPagesModel->{CrawledPagesModel::DOMAIN}),
             Url::create($crawledPagesModel->{CrawledPagesModel::URL}),
-            PageContent::create($crawledPagesModel->{CrawledPagesModel::CONTENT})
+            PageContent::create(html_entity_decode($crawledPagesModel->{CrawledPagesModel::CONTENT}))
         );
     }
 }

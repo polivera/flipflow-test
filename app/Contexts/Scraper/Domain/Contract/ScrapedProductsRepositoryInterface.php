@@ -8,6 +8,5 @@ use App\Contexts\Scraper\Domain\ValueObject\ScrapedContentList;
 
 interface ScrapedProductsRepositoryInterface
 {
-    // TODO: Change that int maybe?
     public function saveBulk(ScrapedContentList $scrapedContentList): int;
 }

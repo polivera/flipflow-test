@@ -22,9 +22,7 @@ final readonly class CarrefourProductScraper implements HostProductScraperInterf
             "/li[contains(@class, 'product-card-list__item')]";
 
         $domHtml = new DOMDocument('1.0', 'UTF-8');
-        @$domHtml->loadHTML(
-            mb_convert_encoding($crawledPage->content->body, 'HTML-ENTITIES', 'UTF-8')
-        );
+        @$domHtml->loadHTML($crawledPage->content->body);
 
         $xpath = new DOMXPath($domHtml);
         $elements = $xpath->query($productListXPath);
@@ -50,7 +48,7 @@ final readonly class CarrefourProductScraper implements HostProductScraperInterf
             $elementImage = $currentElement->evaluate($productImageXpath, $element);
             $imgUrlStr = $elementImage->item(0)?->attributes->getNamedItem('src')->nodeValue ?? '';
 
-            $result->add(ScrapedProduct::create(
+            $result->add(ScrapedProduct::createWithoutID(
                 $crawledPage->id,
                 ProductName::create($nameStr),
                 Price::fromString($priceStr),

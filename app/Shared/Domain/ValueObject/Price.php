@@ -6,7 +6,6 @@ namespace App\Shared\Domain\ValueObject;
 
 final readonly class Price
 {
-    // TODO: split amount and currency
     private function __construct(
         public int $value,
         public string $currency,
@@ -18,8 +17,7 @@ final readonly class Price
     {
         return new self($value, $currency);
     }
-
-    // TODO: When split this should have different logic
+    
     public static function fromString(string $value): self
     {
         // TODO: Improve this

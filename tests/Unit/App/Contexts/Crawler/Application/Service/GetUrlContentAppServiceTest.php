@@ -9,7 +9,9 @@ use App\Contexts\Crawler\Application\Exception\GetUrlContentAppServiceException;
 use App\Contexts\Crawler\Application\Service\GetUrlContentAppService;
 use App\Contexts\Crawler\Domain\Contracts\CrawlPageServiceInterface;
 use App\Contexts\Crawler\Domain\Exception\CrawlPageServiceException;
-use App\Contexts\Scraper\Domain\Contract\ScrapProductPageServiceInterface;
+use App\Contexts\Scraper\Application\Command\ScrapProductPageCommand;
+use App\Contexts\Scraper\Application\Contract\ScrapProductPageAppServiceInterface;
+use App\Contexts\Scraper\Application\Exception\ScrapProductPageAppServiceException;
 use App\Shared\Domain\ValueObject\Url;
 use Mockery;
 use Mockery\MockInterface;
@@ -21,13 +23,13 @@ use Tests\Stubs\Context\Scraper\ValueObject\ScrapPageResultsStub;
 #[CoversClass(GetUrlContentAppService::class)] final class GetUrlContentAppServiceTest extends TestCase
 {
     private MockInterface|CrawlPageServiceInterface $crawlPageServiceMock;
-    private MockInterface|ScrapProductPageServiceInterface $scrapProductPageServiceMock;
+    private MockInterface|ScrapProductPageAppServiceInterface $scrapProductPageServiceMock;
     private GetUrlContentAppService $service;
 
     public function setUp(): void
     {
         $this->crawlPageServiceMock = Mockery::mock(CrawlPageServiceInterface::class);
-        $this->scrapProductPageServiceMock = Mockery::mock(ScrapProductPageServiceInterface::class);
+        $this->scrapProductPageServiceMock = Mockery::mock(ScrapProductPageAppServiceInterface::class);
         $this->service = new GetUrlContentAppService($this->crawlPageServiceMock, $this->scrapProductPageServiceMock);
     }
 
@@ -41,7 +43,7 @@ use Tests\Stubs\Context\Scraper\ValueObject\ScrapPageResultsStub;
         $this->service->handle($command);
     }
 
-    public function testCrawlServiceHandlerThrowsException(): void
+    public function testCrawlPageServiceHandlerThrowsException(): void
     {
         $command = new GetUrlContentCommand("https://www.example.com");
 
@@ -54,16 +56,15 @@ use Tests\Stubs\Context\Scraper\ValueObject\ScrapPageResultsStub;
             ->andThrow(CrawlPageServiceException::class);
 
         $this->expectException(GetUrlContentAppServiceException::class);
-        $this->expectExceptionMessage("Crawl page failed on getUrlContentAppService.");
+        $this->expectExceptionMessage('Crawl page failed on getUrlContentAppService.');
 
         $this->service->handle($command);
     }
 
-    public function testHappyPath(): void
+    public function testScrapProductPageServiceThrowsException(): void
     {
         $command = new GetUrlContentCommand("https://www.example.com");
         $crawledPageMock = CrawledPageStub::random();
-        $scrapPageResultMock = ScrapPageResultsStub::random();
 
         $this->crawlPageServiceMock
             ->shouldReceive('handle')
@@ -76,7 +77,40 @@ use Tests\Stubs\Context\Scraper\ValueObject\ScrapPageResultsStub;
         $this->scrapProductPageServiceMock
             ->shouldReceive('handle')
             ->once()
-            ->with($crawledPageMock->id)
+            ->withArgs(function (ScrapProductPageCommand $command) use ($crawledPageMock) {
+                $this->assertEquals($crawledPageMock->id->value, $command->pageId);
+                return true;
+            })
+            ->andThrow(ScrapProductPageAppServiceException::class);
+
+        $this->expectException(GetUrlContentAppServiceException::class);
+        $this->expectExceptionMessage('Error when trying to scrap product page');
+
+        $this->service->handle($command);
+    }
+
+    public function testHappyPath(): void
+    {
+        $command = new GetUrlContentCommand("https://www.example.com");
+        $crawledPageMock = CrawledPageStub::random();
+        $scrapPageResultMock = ScrapPageResultsStub::random();
+
+        $this->crawlPageServiceMock
+            ->shouldReceive('handle')
+            ->once()
+            ->withArgs(function (Url $url) use ($command) {
+                $this->assertEquals($command->url, $url->value);
+                return true;
+            })
+            ->andReturn($crawledPageMock);
+
+        $this->scrapProductPageServiceMock
+            ->shouldReceive('handle')
+            ->once()
+            ->withArgs(function (ScrapProductPageCommand $command) use ($crawledPageMock) {
+                $this->assertEquals($crawledPageMock->id->value, $command->pageId);
+                return true;
+            })
             ->andReturn($scrapPageResultMock);
 
         $result = $this->service->handle($command);

@@ -6,7 +6,12 @@ namespace App\Contexts\Product\Application\Command;
 
 final readonly class ListUrlProductsCommand
 {
-    public function __construct(public string $url)
+    private function __construct(public string $url)
     {
+    }
+
+    public static function create(string $url): self
+    {
+        return new self($url);
     }
 }

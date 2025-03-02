@@ -4,35 +4,35 @@ declare(strict_types=1);
 
 namespace App\Contexts\Product\Interface\Dto;
 
-use App\Contexts\Product\Domain\ValueObject\Product;
+use App\Contexts\Product\Domain\ValueObject\ProductList;
 
 final readonly class ProductListResponse
 {
     private function __construct(
-        public string $name,
-        public string $price,
-        public string $imageUrl,
-        public string $productUrl,
+        public array $data,
     ) {
     }
 
     public function toArray(): array
     {
-        return [
-            'name' => $this->name,
-            'price' => $this->price,
-            'image_url' => $this->imageUrl,
-            'url' => $this->productUrl,
-        ];
+        $arrayResult = [];
+        foreach ($this->data as $item) {
+            $arrayResult[] = $item->toArray();
+        }
+        return $arrayResult;
     }
 
-    public static function fromValueObject(Product $product): self
+    public static function fromValueObject(ProductList $productList): self
     {
-        return new self(
-            $product->productName->value,
-            $product->price->toString(),
-            $product->imageUrl->value,
-            $product->productUrl->value
-        );
+        $response = [];
+        foreach ($productList->iterator() as $result) {
+            $response[] = ProductItemResponse::fromValueObject($result);
+        }
+        return new self($response);
+    }
+
+    public function toPrettyJson(): string
+    {
+        return json_encode($this->toArray(),  JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 }

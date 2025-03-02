@@ -17,4 +17,9 @@ final class GetUrlContentAppServiceException extends Exception
     {
         return new self("Crawl page failed on getUrlContentAppService.", 0, $exception);
     }
+
+    public static function ofScrapProductsError(Exception $exception): self
+    {
+        return new self("Error when trying to scrap product page", 0, $exception);
+    }
 }

@@ -9,7 +9,11 @@ use App\Contexts\Crawler\Application\Contract\GetUrlContentAppServiceInterface;
 use App\Contexts\Crawler\Application\Exception\GetUrlContentAppServiceException;
 use App\Contexts\Crawler\Domain\Contracts\CrawlPageServiceInterface;
 use App\Contexts\Crawler\Domain\Exception\CrawlPageServiceException;
+use App\Contexts\Scraper\Application\Command\ScrapProductPageCommand;
+use App\Contexts\Scraper\Application\Contract\ScrapProductPageAppServiceInterface;
+use App\Contexts\Scraper\Application\Exception\ScrapProductPageAppServiceException;
 use App\Contexts\Scraper\Domain\Contract\ScrapProductPageServiceInterface;
+use App\Contexts\Scraper\Domain\Exception\ScrapProductPageServiceException;
 use App\Contexts\Scraper\Domain\ValueObject\ScrapPageResults;
 use App\Shared\Domain\ValueObject\Url;
 use InvalidArgumentException;
@@ -19,7 +23,7 @@ final readonly class GetUrlContentAppService implements GetUrlContentAppServiceI
     public function __construct(
         private CrawlPageServiceInterface $crawlPageService,
         // TODO: Change this to event?
-        private ScrapProductPageServiceInterface $scrapProductPageService,
+        private ScrapProductPageAppServiceInterface $scrapProductPageAppService,
     )
     {
     }
@@ -32,11 +36,15 @@ final readonly class GetUrlContentAppService implements GetUrlContentAppServiceI
         try {
             $url = Url::create($command->url);
             $crawlPage = $this->crawlPageService->handle($url);
-            return $this->scrapProductPageService->handle($crawlPage->id);
+            return $this->scrapProductPageAppService->handle(
+                ScrapProductPageCommand::create($crawlPage->id->value)
+            );
         } catch (InvalidArgumentException $e) {
             throw GetUrlContentAppServiceException::ofInvalidArgument($e);
         } catch (CrawlPageServiceException $e) {
             throw GetUrlContentAppServiceException::onPageCrawl($e);
+        } catch (ScrapProductPageAppServiceException $e) {
+            throw GetUrlContentAppServiceException::ofScrapProductsError($e);
         }
     }
 }

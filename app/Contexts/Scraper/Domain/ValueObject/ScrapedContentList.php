@@ -19,6 +19,16 @@ final class ScrapedContentList
         $this->data[] = $scrapedContent;
     }
 
+    public function get(int $index): ?ScrapedProduct
+    {
+        return $this->data[$index] ?? null;
+    }
+
+    public function length(): int
+    {
+        return count($this->data);
+    }
+
     public function iterator(): Iterator
     {
         return new ArrayIterator($this->data);

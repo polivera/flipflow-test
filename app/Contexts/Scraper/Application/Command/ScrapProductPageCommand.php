@@ -6,7 +6,12 @@ namespace App\Contexts\Scraper\Application\Command;
 
 final readonly class ScrapProductPageCommand
 {
-    public function __construct(
+    private function __construct(
         public int $pageId
     ) {}
+
+    public static function create(int $id): ScrapProductPageCommand
+    {
+        return new self($id);
+    }
 }

@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace App\Contexts\Crawler\Domain\ValueObject;
 
 use App\Shared\Domain\ValueObject\Url;
+use InvalidArgumentException;
 
 final readonly class Domain
 {
     private function __construct(public string $value) {
-        // TODO: Domain validation
+        if (empty($this->value)) {
+            throw new InvalidArgumentException("Domain value can't be empty");
+        }
     }
 
     public static function create(string $value): self

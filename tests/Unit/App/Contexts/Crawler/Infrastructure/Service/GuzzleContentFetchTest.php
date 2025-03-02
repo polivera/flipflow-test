@@ -108,7 +108,6 @@ use PHPUnit\Framework\TestCase;
         Http::shouldReceive('withHeaders')
             ->once()
             ->withArgs(function(array $headers) {
-                // TODO: Improve this test so the error is clearer.
                 $this->assertEquals(array_keys($headers), $this->shouldContainHeaders());
                 return true;
             })
@@ -147,7 +146,6 @@ use PHPUnit\Framework\TestCase;
         Http::shouldReceive('withHeaders')
             ->once()
             ->withArgs(function(array $headers) {
-                // TODO: Improve this test so the error is clearer.
                 $this->assertEquals(array_keys($headers), $this->shouldContainHeaders());
                 return true;
             })
