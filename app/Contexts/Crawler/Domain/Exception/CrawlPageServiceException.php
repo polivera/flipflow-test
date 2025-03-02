@@ -16,6 +16,11 @@ final class CrawlPageServiceException extends Exception
 
     public static function ofFetchContentError(Url $url, Exception $exception): self
     {
-        return new self("Cannot retrieve content from url $url->value", 0, $exception);
+        return new self("Cannot retrieve content from url $url->value", $exception->code, $exception);
+    }
+
+    public static function ofRepositoryError(Url $url, Exception $exception): self
+    {
+        return new self("Error while storing crawled page content for url $url->value", $exception->code, $exception);
     }
 }

@@ -12,8 +12,6 @@ use App\Contexts\Crawler\Domain\Exception\CrawlPageServiceException;
 use App\Contexts\Scraper\Application\Command\ScrapProductPageCommand;
 use App\Contexts\Scraper\Application\Contract\ScrapProductPageAppServiceInterface;
 use App\Contexts\Scraper\Application\Exception\ScrapProductPageAppServiceException;
-use App\Contexts\Scraper\Domain\Contract\ScrapProductPageServiceInterface;
-use App\Contexts\Scraper\Domain\Exception\ScrapProductPageServiceException;
 use App\Contexts\Scraper\Domain\ValueObject\ScrapPageResults;
 use App\Shared\Domain\ValueObject\Url;
 use InvalidArgumentException;

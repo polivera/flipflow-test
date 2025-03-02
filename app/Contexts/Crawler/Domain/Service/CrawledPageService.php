@@ -11,6 +11,7 @@ use App\Contexts\Crawler\Domain\Exception\CrawlPageServiceException;
 use App\Contexts\Crawler\Domain\ValueObject\CrawledPage;
 use App\Contexts\Crawler\Domain\ValueObject\Domain;
 use App\Contexts\Crawler\Infrastructure\Exception\ContentFetchException;
+use App\Contexts\Crawler\Infrastructure\Exception\CrawledPagesRepositoryException;
 use App\Shared\Domain\ValueObject\Url;
 
 final readonly class CrawledPageService implements CrawlPageServiceInterface
@@ -37,6 +38,8 @@ final readonly class CrawledPageService implements CrawlPageServiceInterface
             );
         } catch (ContentFetchException $exception) {
             throw CrawlPageServiceException::ofFetchContentError($url, $exception);
+        } catch (CrawledPagesRepositoryException $exception) {
+            throw CrawlPageServiceException::ofRepositoryError($url, $exception);
         }
     }
 }
