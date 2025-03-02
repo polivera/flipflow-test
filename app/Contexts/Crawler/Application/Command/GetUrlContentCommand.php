@@ -6,7 +6,12 @@ namespace App\Contexts\Crawler\Application\Command;
 
 final readonly class GetUrlContentCommand
 {
-    public function __construct(
+    private function __construct(
         public string $url,
     ){}
+
+    public static function create(string $url):self
+    {
+        return new self($url);
+    }
 }

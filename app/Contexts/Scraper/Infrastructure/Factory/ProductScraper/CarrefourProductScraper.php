@@ -28,7 +28,10 @@ final readonly class CarrefourProductScraper implements HostProductScraperInterf
         $elements = $xpath->query($productListXPath);
 
         $result = ScrapedContentList::empty();
-        foreach ($elements as $element) {
+        foreach ($elements as $index => $element) {
+            if ($index === 5) {
+                break;
+            }
             $productLinkXpath = ".//a[contains(@class, 'product-card__title-link')]";
             $productPriceXpath = ".//span[contains(@class, 'product-card__price')]";
             $productImageXpath = ".//img[contains(@class, 'product-card__image')]";

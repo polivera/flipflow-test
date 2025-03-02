@@ -17,11 +17,11 @@ final readonly class Price
     {
         return new self($value, $currency);
     }
-    
+
     public static function fromString(string $value): self
     {
         // TODO: Improve this
-        $numericValue = preg_replace('/[^0-9.]/', '', $value);
+        $numericValue = preg_replace('/[^0-9]/', '', $value);
         $currencyCode = preg_replace('/[0-9., ]/', '', $value);
         return new self((int)$numericValue, $currencyCode);
     }

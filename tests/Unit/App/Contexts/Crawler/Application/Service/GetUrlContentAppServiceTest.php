@@ -35,7 +35,7 @@ use Tests\Stubs\Context\Scraper\ValueObject\ScrapPageResultsStub;
 
     public function testInvalidUrlFromCommand(): void
     {
-        $command = new GetUrlContentCommand("");
+        $command = GetUrlContentCommand::create("");
 
         $this->expectException(GetUrlContentAppServiceException::class);
         $this->expectExceptionMessage("Invalid argument provided for getUrlContentAppService.");
@@ -45,7 +45,7 @@ use Tests\Stubs\Context\Scraper\ValueObject\ScrapPageResultsStub;
 
     public function testCrawlPageServiceHandlerThrowsException(): void
     {
-        $command = new GetUrlContentCommand("https://www.example.com");
+        $command = GetUrlContentCommand::create("https://www.example.com");
 
         $this->crawlPageServiceMock
             ->shouldReceive('handle')
@@ -63,7 +63,7 @@ use Tests\Stubs\Context\Scraper\ValueObject\ScrapPageResultsStub;
 
     public function testScrapProductPageServiceThrowsException(): void
     {
-        $command = new GetUrlContentCommand("https://www.example.com");
+        $command = GetUrlContentCommand::create("https://www.example.com");
         $crawledPageMock = CrawledPageStub::random();
 
         $this->crawlPageServiceMock
@@ -91,7 +91,7 @@ use Tests\Stubs\Context\Scraper\ValueObject\ScrapPageResultsStub;
 
     public function testHappyPath(): void
     {
-        $command = new GetUrlContentCommand("https://www.example.com");
+        $command = GetUrlContentCommand::create("https://www.example.com");
         $crawledPageMock = CrawledPageStub::random();
         $scrapPageResultMock = ScrapPageResultsStub::random();
 

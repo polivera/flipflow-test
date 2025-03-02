@@ -16,7 +16,6 @@ use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 use Tests\Stubs\Context\Crawler\ValueObject\DomainStub;
 use Tests\Stubs\Shared\ValueObject\ScrapedContentListStub;
 

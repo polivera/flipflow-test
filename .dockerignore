@@ -1,0 +1,5 @@
+vendor
+tests
+storage
+bootstrap/cache
+database/database.sqlite

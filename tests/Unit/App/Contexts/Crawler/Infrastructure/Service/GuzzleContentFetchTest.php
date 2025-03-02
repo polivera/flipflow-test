@@ -146,7 +146,7 @@ use PHPUnit\Framework\TestCase;
         Http::shouldReceive('withHeaders')
             ->once()
             ->withArgs(function(array $headers) {
-                $this->assertEquals(array_keys($headers), $this->shouldContainHeaders());
+                $this->assertEquals($this->shouldContainHeaders(), array_keys($headers));
                 return true;
             })
             ->andReturnSelf();
@@ -178,6 +178,10 @@ use PHPUnit\Framework\TestCase;
             'Cache-Control',
             'Connection',
             'Pragma',
+            'Priority',
+            'Sec-Ch-Ua',
+            'Sec-Ch-Ua-Mobile',
+            'Sec-Ch-Ua-Platform',
             'Sec-Fetch-Dest',
             'Sec-Fetch-Mode',
             'Sec-Fetch-Site',

@@ -47,7 +47,7 @@ final class ConsoleSaveProductList extends Command
 
         try {
             $result = $this->getUrlContentAppService->handle(
-                new GetUrlContentCommand($url)
+                GetUrlContentCommand::create($url)
             );
             $this->info(ScrapPageResultResponse::fromValueObject($url, $result)->toPrettyJson());
         } catch (GetUrlContentAppServiceException $e) {
