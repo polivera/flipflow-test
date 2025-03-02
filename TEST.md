@@ -23,8 +23,10 @@ Viendo esto, y pensando que quizá iba a tener que usar librerías externas para
 Trato de no usar librerías si no es necesario y para esto no use por 2 razones:
   1. Falta de conocimiento de este tipo de librerías
   2. Al ser un scope tan pequeño (1 sólo sitio) es algo manejable. Si fuesen más creo que es preferible usar una librería.
-     Al llegar a la parte de hacer scraping me di cuenta que debería tener una solución por sitio por si quería agregar alguno sitio más si tenía tiempo, entonces decidí usar un factory con un config que, dependiendo el dominio, me entregue el scraper correspondiente.
-     Al hacer la parte de guardar los productos en la base de datos decidí usar int para currency dado que SQLite no tiene decimal.
+
+Al llegar a la parte de hacer scraping me di cuenta que debería tener una solución por sitio por si quería agregar alguno sitio más si tenía tiempo, entonces decidí usar un factory con un config que, dependiendo el dominio, me entregue el scraper correspondiente.
+
+En la parte de guardar los productos en la base de datos decidí usar int para currency dado que SQLite no tiene decimal.
 
 La función `mb_convert_encoding` está con un `@` dado que el usarla con `HTML-ENTITIES` está deprecado y tuve problemas de encoding al mostrar la data. Este problema se puede deber a que use `TEXT` en lugar de `BLOB` en la base de datos.
 
