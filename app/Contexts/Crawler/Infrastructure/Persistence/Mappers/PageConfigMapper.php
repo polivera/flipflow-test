@@ -33,8 +33,8 @@ final readonly class PageConfigMapper
             NumberID::create($model->{PageConfigModel::ID}),
             Url::create($model->{PageConfigModel::SITE}),
             ConfigPriority::create($model->{PageConfigModel::PRIORITY}),
-            HeaderList::fromJson($model->{PageConfigModel::HEADERS}),
-            CookieList::fromJson($model->{PageConfigModel::COOKIES}),
+            HeaderList::fromJson($model->{PageConfigModel::HEADERS} ?? PageconfigModel::EMPTY_HEADERS_JSON),
+            CookieList::fromJson($model->{PageConfigModel::COOKIES} ?? PageConfigModel::EMPTY_COOKIES_JSON),
         );
     }
 }

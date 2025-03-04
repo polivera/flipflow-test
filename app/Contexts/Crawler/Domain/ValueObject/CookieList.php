@@ -28,8 +28,18 @@ final class CookieList
         return json_encode($this->data);
     }
 
+    public function toArray(): array
+    {
+        return $this->data;
+    }
+
     public static function fromJson(string $json): self
     {
-        return new self(json_decode($json, true));
+        $cookieArray = json_decode($json, true);
+        $resultArray = [];
+        foreach ($cookieArray as $name=>$value) {
+            $resultArray[$name] = Cookie::create($name, $value);
+        }
+        return new self($resultArray);
     }
 }

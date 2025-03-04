@@ -28,6 +28,11 @@ final class HeaderList
         return json_encode($this->data);
     }
 
+    public function toArray(): array
+    {
+        return $this->data;
+    }
+
     public static function fromJson(string $json): self
     {
         return new self(json_decode($json, true));
