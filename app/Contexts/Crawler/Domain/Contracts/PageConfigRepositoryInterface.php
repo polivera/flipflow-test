@@ -10,4 +10,6 @@ use App\Shared\Domain\ValueObject\Url;
 interface PageConfigRepositoryInterface
 {
     public function getForUrl(Url $url): ?PageConfig;
+
+    public function save(PageConfig $pageConfig): PageConfig;
 }
