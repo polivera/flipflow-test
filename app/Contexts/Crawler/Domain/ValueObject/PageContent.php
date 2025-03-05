@@ -12,6 +12,7 @@ final readonly class PageContent
 
     public static function create(string $body): self
     {
-        return new self(@mb_convert_encoding($body, 'HTML-ENTITIES', 'UTF-8'));
+//        return new self(@mb_convert_encoding($body, 'HTML-ENTITIES', 'UTF-8'));
+        return new self($body);
     }
 }

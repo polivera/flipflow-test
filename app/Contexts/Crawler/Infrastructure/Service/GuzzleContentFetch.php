@@ -10,6 +10,7 @@ use App\Contexts\Crawler\Domain\ValueObject\Cookie;
 use App\Contexts\Crawler\Domain\ValueObject\Domain;
 use App\Contexts\Crawler\Domain\ValueObject\PageContent;
 use App\Contexts\Crawler\Infrastructure\Exception\ContentFetchException;
+use App\Contexts\Crawler\Infrastructure\Exception\PageConfigRepositoryException;
 use App\Shared\Domain\Contract\LoggerInterface;
 use App\Shared\Domain\ValueObject\Url;
 use Exception;
@@ -37,7 +38,6 @@ final readonly class GuzzleContentFetch implements ContentFetchInterface
             $pageConfig = $this->pageConfigRepository->getForUrl($url);
             $domain = Domain::fromUrl($url);
 
-            /** @var Cookie $cookie */
             foreach ($pageConfig->cookies->toArray() as $cookie) {
                 $this->cookieJar->setCookie($this->generateCookie($cookie, $domain));
             }
@@ -57,6 +57,12 @@ final readonly class GuzzleContentFetch implements ContentFetchInterface
                 ['url' => $url->value, 'exception' => $exception]
             );
             throw ContentFetchException::ofConnectionError($url, $exception);
+        } catch (PageConfigRepositoryException $exception) {
+            $this->logger->error(
+                'Page config repository error retrieving content',
+                ['url' => $url->value, 'exception' => $exception]
+            );
+            throw ContentFetchException::ofRetrievingPageConfigError($url, $exception);
         } catch (Exception $exception) {
             $this->logger->error(
                 'Unexpected error while fetching content',

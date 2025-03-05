@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id(CrawledPagesModel::ID);
             $table->string(CrawledPagesModel::DOMAIN)->index();
             $table->string(CrawledPagesModel::URL)->unique()->index();
-            $table->text(CrawledPagesModel::CONTENT);
+            $table->binary(CrawledPagesModel::CONTENT);
             $table->timestamps();
         });
     }

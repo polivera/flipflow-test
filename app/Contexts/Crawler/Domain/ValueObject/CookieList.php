@@ -23,23 +23,31 @@ final class CookieList
         return new ArrayIterator($this->data);
     }
 
+    public static function fromJson(string $json): self
+    {
+        $cookieArray = json_decode($json, true);
+        $resultArray = [];
+        foreach ($cookieArray as $name => $value) {
+            $resultArray[$name] = Cookie::create($name, $value);
+        }
+        return new self($resultArray);
+    }
+
     public function toJson(): string
     {
         return json_encode($this->data);
     }
 
+    public static function fromArray(array $data): self
+    {
+        return new self($data);
+    }
+
+    /**
+     * @return Cookie[]
+     */
     public function toArray(): array
     {
         return $this->data;
-    }
-
-    public static function fromJson(string $json): self
-    {
-        $cookieArray = json_decode($json, true);
-        $resultArray = [];
-        foreach ($cookieArray as $name=>$value) {
-            $resultArray[$name] = Cookie::create($name, $value);
-        }
-        return new self($resultArray);
     }
 }
