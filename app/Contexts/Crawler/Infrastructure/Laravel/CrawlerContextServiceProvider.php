@@ -9,8 +9,10 @@ use App\Contexts\Crawler\Application\Service\GetUrlContentAppService;
 use App\Contexts\Crawler\Domain\Contracts\ContentFetchInterface;
 use App\Contexts\Crawler\Domain\Contracts\CrawledPagesRepositoryInterface;
 use App\Contexts\Crawler\Domain\Contracts\CrawlPageServiceInterface;
+use App\Contexts\Crawler\Domain\Contracts\PageConfigRepositoryInterface;
 use App\Contexts\Crawler\Domain\Service\CrawledPageService;
 use App\Contexts\Crawler\Infrastructure\Persistence\Repository\CrawledPagesSQLiteRepository;
+use App\Contexts\Crawler\Infrastructure\Persistence\Repository\PageConfigSQLiteRepository;
 use App\Contexts\Crawler\Infrastructure\Service\GuzzleContentFetch;
 use App\Contexts\Crawler\Interface\Console\ConsoleSaveProductList;
 use Carbon\Laravel\ServiceProvider;
@@ -36,5 +38,6 @@ final class CrawlerContextServiceProvider extends ServiceProvider
         $this->app->bind(CrawledPagesRepositoryInterface::class, CrawledPagesSQLiteRepository::class);
         $this->app->bind(CrawlPageServiceInterface::class, CrawledPageService::class);
         $this->app->bind(GetUrlContentAppServiceInterface::class, GetUrlContentAppService::class);
+        $this->app->bind(PageConfigRepositoryInterface::class, PageConfigSQLiteRepository::class);
     }
 }

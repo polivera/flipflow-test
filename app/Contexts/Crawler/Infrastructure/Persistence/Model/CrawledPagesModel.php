@@ -16,6 +16,6 @@ class CrawledPagesModel extends BaseModel
     public const CREATED_AT = 'created_at';
     public const UPDATED_AT = 'updated_at';
 
-    protected $primaryKey = self::ID;
     protected $table = self::TABLE_NAME;
+    protected $primaryKey = self::ID;
 }
