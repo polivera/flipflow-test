@@ -5,12 +5,17 @@ declare(strict_types=1);
 namespace App\Contexts\Crawler\Infrastructure\Service;
 
 use App\Contexts\Crawler\Domain\Contracts\ContentFetchInterface;
+use App\Contexts\Crawler\Domain\Contracts\PageConfigRepositoryInterface;
+use App\Contexts\Crawler\Domain\ValueObject\Cookie;
+use App\Contexts\Crawler\Domain\ValueObject\Domain;
 use App\Contexts\Crawler\Domain\ValueObject\PageContent;
 use App\Contexts\Crawler\Infrastructure\Exception\ContentFetchException;
+use App\Contexts\Crawler\Infrastructure\Exception\PageConfigRepositoryException;
 use App\Shared\Domain\Contract\LoggerInterface;
 use App\Shared\Domain\ValueObject\Url;
 use Exception;
 use GuzzleHttp\Cookie\CookieJarInterface;
+use GuzzleHttp\Cookie\SetCookie;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
@@ -18,6 +23,7 @@ use Illuminate\Support\Facades\Http;
 final readonly class GuzzleContentFetch implements ContentFetchInterface
 {
     public function __construct(
+        private PageConfigRepositoryInterface $pageConfigRepository,
         private LoggerInterface $logger,
         private CookieJarInterface $cookieJar
     ) {
@@ -29,9 +35,16 @@ final readonly class GuzzleContentFetch implements ContentFetchInterface
     public function getContent(Url $url): ?PageContent
     {
         try {
+            $pageConfig = $this->pageConfigRepository->getForUrl($url);
+            $domain = Domain::fromUrl($url);
+
+            foreach ($pageConfig->cookies->toArray() as $cookie) {
+                $this->cookieJar->setCookie($this->generateCookie($cookie, $domain));
+            }
+
             $requestOptions = ['cookies' => $this->cookieJar];
             $response = Http::withOptions($requestOptions)
-                ->withHeaders($this->buildRequestHeaders())
+                ->withHeaders($pageConfig->headers->toArray())
                 ->get($url->value);
             if ($response->successful()) {
                 return PageContent::create($response->body());
@@ -44,6 +57,12 @@ final readonly class GuzzleContentFetch implements ContentFetchInterface
                 ['url' => $url->value, 'exception' => $exception]
             );
             throw ContentFetchException::ofConnectionError($url, $exception);
+        } catch (PageConfigRepositoryException $exception) {
+            $this->logger->error(
+                'Page config repository error retrieving content',
+                ['url' => $url->value, 'exception' => $exception]
+            );
+            throw ContentFetchException::ofRetrievingPageConfigError($url, $exception);
         } catch (Exception $exception) {
             $this->logger->error(
                 'Unexpected error while fetching content',
@@ -53,25 +72,13 @@ final readonly class GuzzleContentFetch implements ContentFetchInterface
         }
     }
 
-    private function buildRequestHeaders(): array
+    private function generateCookie(Cookie $cookie, Domain $domain): SetCookie
     {
-        return [
-            'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
-            'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-            'Accept-Encoding' => 'gzip, deflate, br, zstd',
-            'Accept-Language' => 'en-US,en;q=0.9',
-            'Cache-Control' => 'no-cache',
-            'Connection' => 'keep-alive',
-            'Pragma' => 'no-cache',
-            'Priority' => 'u=0, i',
-            'Sec-Ch-Ua' => '"Not(A:Brand";v="99", "Brave";v="133", "Chromium";v="133"',
-            'Sec-Ch-Ua-Mobile' => '?0',
-            'Sec-Ch-Ua-Platform' => '"Linux"',
-            'Sec-Fetch-Dest' => 'document',
-            'Sec-Fetch-Mode' => 'navigate',
-            'Sec-Fetch-Site' => 'none',
-            'Sec-Fetch-User' => '?1',
-            'Upgrade-Insecure-Requests' => '1',
-        ];
+        return new SetCookie([
+            'Name' => $cookie->name,
+            'Value' => $cookie->value,
+            'Domain' => $domain->value,
+            'Path' => '/'
+        ]);
     }
 }

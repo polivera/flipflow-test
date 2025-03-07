@@ -18,4 +18,9 @@ final class ContentFetchException extends Exception
     {
         return new self("Unexpected error when fetching content from $url->value", 0, $previousException);
     }
+
+    public static function ofRetrievingPageConfigError(url $url, Exception $previousException): self
+    {
+        return new self("Error while retrieving page configuration for url $url->value", 0, $previousException);
+    }
 }

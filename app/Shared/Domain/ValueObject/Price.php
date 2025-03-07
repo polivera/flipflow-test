@@ -8,12 +8,12 @@ final readonly class Price
 {
     private function __construct(
         public int $value,
-        public string $currency,
+        public Currency $currency,
     )
     {
     }
 
-    public static function create(int $value, string $currency): self
+    public static function create(int $value, Currency $currency): self
     {
         return new self($value, $currency);
     }
@@ -23,12 +23,13 @@ final readonly class Price
         // TODO: Improve this
         $numericValue = preg_replace('/[^0-9]/', '', $value);
         $currencyCode = preg_replace('/[0-9., ]/', '', $value);
-        return new self((int)$numericValue, $currencyCode);
+        $currency = Currency::fromString($currencyCode);
+        return new self((int)$numericValue, $currency);
     }
 
     public function toString(): string
     {
         $formatedNumber = number_format($this->value / 100, 2);
-        return sprintf("%s %s", $formatedNumber, $this->currency);
+        return sprintf("%s %s", $formatedNumber, $this->currency->symbol());
     }
 }

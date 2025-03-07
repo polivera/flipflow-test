@@ -54,7 +54,7 @@ final readonly class CarrefourProductScraper implements HostProductScraperInterf
             $result->add(ScrapedProduct::createWithoutID(
                 $crawledPage->id,
                 ProductName::create($nameStr),
-                Price::fromString($priceStr),
+                Price::fromString(htmlentities($priceStr, encoding: 'UTF-8')),
                 Url::create($imgUrlStr),
                 // TODO: How do I bring the proto here
                 Url::create('https://' . $crawledPage->domain->value . $urlStr),
