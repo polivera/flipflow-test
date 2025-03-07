@@ -44,7 +44,7 @@ use Tests\Stubs\Shared\ValueObject\UrlStub;
 
         $this->assertEquals(1, $result->length());
         $this->assertEquals("203", $result->get(0)->price->value);
-        $this->assertEquals("€", $result->get(0)->price->currency);
+        $this->assertEquals("€", $result->get(0)->price->currency->symbol());
         $this->assertEquals($mockID->value, $result->get(0)->crawledPageID->value);
         $this->assertEquals($mockProductName, $result->get(0)->productName->value);
         $this->assertEquals($mockImgLink, $result->get(0)->imageUrl->value);
