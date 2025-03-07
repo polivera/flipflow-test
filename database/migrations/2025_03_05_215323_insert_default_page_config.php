@@ -23,7 +23,9 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        //
+        DB::table(PageConfigModel::TABLE_NAME)
+            ->where(PageConfigModel::SITE, '=', PageConfigModel::DEFAULT_CONFIG_SITE)
+            ->delete();
     }
 
     private function buildDefaultHeaders(): array
